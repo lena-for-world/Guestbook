@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>방명록</title>
+</head>
+<body>
+<form id="like_btn_form" method="get" action="/guestbooks/pushPlusLike">
+  <tr th:if="${posts.size() != 0}" th:each="post: ${posts}">
+    <td th:text="${post.getId()}"></td>
+    <td th:text="${post.getName()}"></td>
+    <td th:text="${post.getContent()}"></td>
+    <td th:text="${post.getLiked()}"></td>
+    <td th:text="${post.getHate()}"></td>
+    <button type="submit" name="name" th:value="${post.getName()}" form="like_btn_form">좋아요</button>
+    <button type="submit" name="name" th:value="${post.getName()}" formaction="/guestbooks/pushPlusHate">싫어요</button>
+    <br>
+  </tr>
+</form>
+  <form action="/guestbooks/write" method="post">
+    <div class="form-group">
+      <label for="name">이름</label>
+      <input type="text" id="name" name="name" required>
+      <br>
+      <label for="content">내용</label>
+      <input type="text" id="content" name="content">
+      <br>
+      <input type="submit" value="저장">
+    </div>
+  </form>
+</body>
+<ul>
+  <p th:if="${duplicateName}" th:text="${duplicateName}"></p>
+</ul>
+</html>
