@@ -1,5 +1,6 @@
 package projectB.guestbook.controller;
 
+import java.time.DateTimeException;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projectB.guestbook.domain.Post;
+import projectB.guestbook.service.ReactingService;
 import projectB.guestbook.service.WritingService;
 
 @Controller
@@ -17,6 +20,7 @@ import projectB.guestbook.service.WritingService;
 public class WritingController {
 
     private final WritingService writingService;
+    private final ReactingService reactingService;
 
     @GetMapping("/guestbooks")
     public String main(Model model) {
@@ -25,7 +29,7 @@ public class WritingController {
     }
 
     @PostMapping("/guestbooks/write")
-    public String write(@Valid Post post, Model model, BindingResult br) {
+    public String write(@Valid Post post, Model model, RedirectAttributes re, BindingResult br) {
         try {
             if (br.hasErrors()) {
                 List<ObjectError> list = br.getAllErrors();
@@ -38,31 +42,19 @@ public class WritingController {
         }
         try {
             writingService.save(post);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            model.addAttribute("duplicateName", e.getMessage());
-            model.addAttribute("posts", writingService.getPosts());
+        } catch (IllegalArgumentException | DateTimeException e) {
+            if(e instanceof IllegalArgumentException) {
+                e.printStackTrace();
+                model.addAttribute("duplicateName", e.getMessage());
+                model.addAttribute("posts", writingService.getPosts());
+            } else {
+                ((DateTimeException) e).printStackTrace();
+                model.addAttribute("lessThanOneMinute", ((DateTimeException) e).getMessage());
+                model.addAttribute("posts", writingService.getPosts());
+            }
             return "main";
         }
         return "redirect:/guestbooks"; // redirect
     }
 
-    @GetMapping("/guestbooks/pushPlusLike")
-    public String pushPlusLike(String name) {
-        // writing서비스에서 좋아요 수 업데이트
-        writingService.plusLike(name);
-        return "redirect:/guestbooks";
-    }
-
-    @GetMapping("/guestbooks/pushPlusHate")
-    public String pushPlusHate(String name) {
-        // writingService에서 싫어요 수 업데이트
-        try {
-            writingService.plusHate(name);
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-
-        }
-        return "redirect:/guestbooks";
-    }
 }

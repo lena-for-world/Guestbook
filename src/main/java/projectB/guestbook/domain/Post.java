@@ -8,10 +8,9 @@ import javax.persistence.Id;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.lang.Nullable;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 
 @Entity
 @Getter @Setter
@@ -29,12 +28,12 @@ public class Post {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
-    @Column(unique = true)
     private String name;
     @Size(min=1, message="1글자 이상의 내용이 있어야 합니다")
     private String content;
     private int liked;
     private int hate;
+    private String dateTime;
 
     // 정적 팩터리 메서드로 엔티티 생성 -- setter 만들지 않기
 

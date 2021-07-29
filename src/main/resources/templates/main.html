@@ -5,15 +5,16 @@
   <title>방명록</title>
 </head>
 <body>
-<form id="like_btn_form" method="get" action="/guestbooks/pushPlusLike">
+<form id="like_btn_form" method="get" action="guestbooks/pushPlusLike">
   <tr th:if="${posts.size() != 0}" th:each="post: ${posts}">
     <td th:text="${post.getId()}"></td>
     <td th:text="${post.getName()}"></td>
     <td th:text="${post.getContent()}"></td>
     <td th:text="${post.getLiked()}"></td>
+    <button type="submit" name="id" th:value="${post.getId()}" form="like_btn_form">좋아요</button>
     <td th:text="${post.getHate()}"></td>
-    <button type="submit" name="name" th:value="${post.getName()}" form="like_btn_form">좋아요</button>
-    <button type="submit" name="name" th:value="${post.getName()}" formaction="/guestbooks/pushPlusHate">싫어요</button>
+    <button type="submit" name="id" th:value="${post.getId()}" formaction="/guestbooks/pushPlusHate">싫어요</button>
+    <td th:text="${post.getDateTime()}"></td>
     <br>
   </tr>
 </form>
@@ -31,5 +32,11 @@
 </body>
 <ul>
   <p th:if="${duplicateName}" th:text="${duplicateName}"></p>
+  <p th:if="${lessThanOneMinute}" th:text="${lessThanOneMinute}"></p>
 </ul>
+<script th:if="${lessThanOneMinute}" th:inline="javascript">
+  /*<![CDATA[*/
+  alert(/*[[ ${lessThanOneMinute} ]]*/);
+  /*]]*/
+</script>
 </html>
