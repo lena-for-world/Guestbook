@@ -4,7 +4,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import projectB.guestbook.domain.Post;
@@ -14,7 +13,8 @@ import projectB.guestbook.domain.Post;
 @RequiredArgsConstructor
 public class WritingRepository {
 
-    @PersistenceContext private final EntityManager em;
+    @PersistenceContext
+    private final EntityManager em;
 
     // 모든 방명록 출력
     public List<Post> findAllPosts() {
@@ -24,8 +24,8 @@ public class WritingRepository {
 
     public List<Post> findPost(Long id) {
         return em.createQuery("select p from Post p where p.id = :id")
-                .setParameter("id", id)
-                .getResultList();
+            .setParameter("id", id)
+            .getResultList();
     }
 
     public List<Post> findPostByName(String name) {

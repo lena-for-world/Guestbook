@@ -28,25 +28,29 @@ public class WritingService {
         post.setLiked(0);
         post.setHate(0);
         post.setDateTime(DateTime.now().toString("yyyy년MM월dd일 HH시mm분ss초"));
-        if(validateContinuousPost(post)) {
+        if (validateContinuousPost(post)) {
             writingRepository.save(post);
-        } else throw new DateTimeException("방명록은 1분에 1개만 작성할 수 있습니다");
+        } else {
+            throw new DateTimeException("방명록은 1분에 1개만 작성할 수 있습니다");
+        }
         /* 동일한 이름에 대한 검증은 필요하지 않음! 게시글 구별을 이름으로 할 예정이기 때문 (∵ 로그인 구현이 없음)*/
     }
 
     public boolean validateContinuousPost(Post post) {
         List<Post> list = writingRepository.findPostByName(post.getName());
-        if(list.size() == 0) {
+        if (list.size() == 0) {
             return true;
         }
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy년MM월dd일 HH시mm분ss초");
-        String postTimeString = list.get(list.size()-1).getDateTime();
+        String postTimeString = list.get(list.size() - 1).getDateTime();
         DateTime postTimeDt = formatter.parseDateTime(postTimeString);
         DateTime nowTime = DateTime.now();
         Duration duration = new Duration(postTimeDt, nowTime);
-        if(duration.getStandardSeconds() <= 60) {
+        if (duration.getStandardSeconds() <= 60) {
             return false;
-        } else return true;
+        } else {
+            return true;
+        }
     }
 
     /*public boolean writerHasPosts(Long id) {

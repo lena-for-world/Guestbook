@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projectB.guestbook.domain.Post;
-import projectB.guestbook.service.ReactingService;
 import projectB.guestbook.service.WritingService;
 
 @Controller
@@ -20,7 +19,6 @@ import projectB.guestbook.service.WritingService;
 public class WritingController {
 
     private final WritingService writingService;
-    private final ReactingService reactingService;
 
     @GetMapping("/guestbooks")
     public String main(Model model) {
@@ -43,7 +41,7 @@ public class WritingController {
         try {
             writingService.save(post);
         } catch (IllegalArgumentException | DateTimeException e) {
-            if(e instanceof IllegalArgumentException) {
+            if (e instanceof IllegalArgumentException) {
                 e.printStackTrace();
                 model.addAttribute("duplicateName", e.getMessage());
                 model.addAttribute("posts", writingService.getPosts());

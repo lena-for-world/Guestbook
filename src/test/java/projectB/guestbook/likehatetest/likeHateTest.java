@@ -17,9 +17,12 @@ import projectB.guestbook.repository.WritingRepository;
 @Transactional
 public class likeHateTest {
 
-    @PersistenceContext private EntityManager em;
-    @Autowired private WritingRepository writingRepository;
-    @Autowired private ReactingRepository reactingRepository;
+    @PersistenceContext
+    private EntityManager em;
+    @Autowired
+    private WritingRepository writingRepository;
+    @Autowired
+    private ReactingRepository reactingRepository;
 
     @Test
     @DisplayName("포스트 추가 테스트")
@@ -52,7 +55,8 @@ public class likeHateTest {
         //when
         writingRepository.save(post);
         reactingRepository.plusLike(post.getId());
-        System.out.println("writingRepository = " + writingRepository.findAllPosts().get(0).getLiked());
+        System.out
+            .println("writingRepository = " + writingRepository.findAllPosts().get(0).getLiked());
 
         //then
         Assertions.assertThat(1).isEqualTo(writingRepository.findAllPosts().get(0).getLiked());
@@ -78,7 +82,7 @@ public class likeHateTest {
         writingRepository.save(post2);
         post = writingRepository.findPost(post.getId()).get(0);
         post2 = writingRepository.findPost(post2.getId()).get(0);
-        
+
         //then
         System.out.println("post2.getId() = " + post2.getId());
         Assertions.assertThat(post.getId()).isNotEqualTo(post2.getId());
