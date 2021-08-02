@@ -16,9 +16,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Entity
 @Getter
-@Setter
 @RequiredArgsConstructor
 public class Post {
+
+
+    public static Post makeNewPost(String name, String content, String dateTime) {
+        Post post = new Post();
+        post.name = name;
+        post.content = content;
+        post.liked = 0;
+        post.hate = 0;
+        post.dateTime = dateTime;
+        return post;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

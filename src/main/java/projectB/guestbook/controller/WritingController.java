@@ -10,8 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import projectB.guestbook.domain.Post;
 import projectB.guestbook.service.WritingService;
 
 @Controller
@@ -22,12 +22,13 @@ public class WritingController {
 
     @GetMapping("/guestbooks")
     public String main(Model model) {
+        model.addAttribute("postForm", new PostForm());
         model.addAttribute("posts", writingService.getPosts());
         return "main";
     }
 
     @PostMapping("/guestbooks/write")
-    public String write(@Valid Post post, Model model, RedirectAttributes re, BindingResult br) {
+    public String write(@Valid PostForm form, Model model, RedirectAttributes ra, BindingResult br) {
         try {
             if (br.hasErrors()) {
                 List<ObjectError> list = br.getAllErrors();
@@ -39,20 +40,13 @@ public class WritingController {
             e.printStackTrace();
         }
         try {
-            writingService.save(post);
-        } catch (IllegalArgumentException | DateTimeException e) {
-            if (e instanceof IllegalArgumentException) {
-                e.printStackTrace();
-                model.addAttribute("duplicateName", e.getMessage());
-                model.addAttribute("posts", writingService.getPosts());
-            } else {
-                ((DateTimeException) e).printStackTrace();
-                model.addAttribute("lessThanOneMinute", ((DateTimeException) e).getMessage());
-                model.addAttribute("posts", writingService.getPosts());
-            }
-            return "main";
+            writingService.save(form);
+        } catch (DateTimeException e) {
+            e.printStackTrace();
+            ra.addFlashAttribute("msg", e.getMessage());
+            return "redirect:/guestbooks";
         }
-        return "redirect:/guestbooks"; // redirect
+        return "redirect:/guestbooks";
     }
 
 }

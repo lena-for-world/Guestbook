@@ -30,25 +30,24 @@
   </tr>
 </form>
 <br><br><br><br><br>
-<form action="/guestbooks/write" method="post">
+<form th:object="${postForm}" action="/guestbooks/write" method="post">
   <div class="form-group">
-    <label for="name">이름</label>
-    <input type="text" id="name" name="name" required>
+    <label th:for="name">이름</label>
+    <input type="text" th:field="*{name}" required>
     <br>
-    <label for="content">내용</label>
-    <input type="text" id="content" name="content">
+    <label th:for="content">내용</label>
+    <input type="text" th:field="*{content}">
     <br>
     <input type="submit" value="저장">
   </div>
 </form>
-</body>
 <ul>
-  <p th:if="${duplicateName}" th:text="${duplicateName}"></p>
-  <p th:if="${lessThanOneMinute}" th:text="${lessThanOneMinute}"></p>
+  <p th:if="${msg}" th:text="${msg}"></p>
 </ul>
-<script th:if="${lessThanOneMinute}" th:inline="javascript">
+</body>
+<script th:if="${msg}" th:inline="javascript">
   /*<![CDATA[*/
-  alert(/*[[ ${lessThanOneMinute} ]]*/);
+  alert(/*[[ ${msg} ]]*/);
   /*]]*/
 </script>
 </html>
